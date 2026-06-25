@@ -4,15 +4,33 @@
 
 ## 快速开始
 
+### 方式一：使用启动脚本（推荐）
+
+**Windows 用户：**
+双击 `run.bat` 即可！
+
+**macOS/Linux 用户：**
 ```bash
-# 1. 安装依赖
+chmod +x run.sh  # 首次运行前添加执行权限
+./run.sh
+```
+
+### 方式二：手动运行
+
+```bash
+# 1. 创建并激活虚拟环境
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
+
+# 2. 安装依赖
 pip install -r requirements.txt
 
-# 2. 配置 API Key
+# 3. 配置 API Key
 cp .env.example .env
 # 编辑 .env，填入 OPENAI_API_KEY
 
-# 3. 运行游戏
+# 4. 运行游戏
 python cli/main.py
 ```
 
