@@ -3,6 +3,10 @@
 from __future__ import annotations
 import asyncio
 import sys
+from pathlib import Path
+
+# Add the project root directory to sys.path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from rich.console import Console
 from rich.panel import Panel
