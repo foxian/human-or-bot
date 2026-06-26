@@ -9,7 +9,8 @@ def session_with_history():
     profile = NpcProfile(
         name="测试人", age=30, occupation="工程师", city="北京",
         personality=["认真"], backstory="测试背景",
-        hobbies=["读书"], speech_style="简洁", quirks=["无"]
+        hobbies=["读书"], speech_style="简洁",
+        defense_style="轻描带过", sealed_topics=[],
     )
     session = GameSession(npc_profile=profile)
     session.conversation_history = [
