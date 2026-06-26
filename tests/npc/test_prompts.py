@@ -111,14 +111,16 @@ def test_build_respond_prompt_reads_threat_level(sample_profile):
 
 
 def test_build_respond_prompt_has_length_rules_by_threat(sample_profile):
-    """Respond prompt 包含按威胁等级分级的长度规则"""
+    """Respond prompt 包含按威胁等级分级的字数上限规则"""
     monologue = "威胁等级：低\n随便聊聊。"
     messages = build_respond_prompt(sample_profile, [], "在干嘛？", monologue)
     system_content = messages[0]["content"]
     assert "低" in system_content
     assert "中" in system_content
     assert "高" in system_content
-    assert "1-2句" in system_content or "1-2 句" in system_content
+    assert "不超过50字" in system_content
+    assert "不超过30字" in system_content
+    assert "不超过15字" in system_content
 
 
 def test_build_respond_prompt_enforces_info_restraint(sample_profile):
