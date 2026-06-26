@@ -99,3 +99,50 @@ def test_build_think_prompt_references_defense_style(sample_profile):
     messages = build_think_prompt(sample_profile, [], "你是真人吗？")
     system_content = messages[0]["content"]
     assert "defense_style" in system_content or "防御姿态" in system_content
+
+
+def test_build_respond_prompt_reads_threat_level(sample_profile):
+    """Respond prompt 要求读取独白第一行的威胁等级"""
+    monologue = "威胁等级：中\n有点试探，我用转移反问挡回去。"
+    messages = build_respond_prompt(sample_profile, [], "你是真人吗？", monologue)
+    system_content = messages[0]["content"]
+    assert "威胁等级" in system_content
+    assert "第一行" in system_content
+
+
+def test_build_respond_prompt_has_length_rules_by_threat(sample_profile):
+    """Respond prompt 包含按威胁等级分级的长度规则"""
+    monologue = "威胁等级：低\n随便聊聊。"
+    messages = build_respond_prompt(sample_profile, [], "在干嘛？", monologue)
+    system_content = messages[0]["content"]
+    assert "低" in system_content
+    assert "中" in system_content
+    assert "高" in system_content
+    assert "1-2句" in system_content or "1-2 句" in system_content
+
+
+def test_build_respond_prompt_enforces_info_restraint(sample_profile):
+    """Respond prompt 强制信息克制：只用 think 决定用的细节"""
+    monologue = "威胁等级：低\n就说刚扎完针，别的不提。"
+    messages = build_respond_prompt(sample_profile, [], "在干嘛？", monologue)
+    system_content = messages[0]["content"]
+    assert "内心独白" in system_content
+    assert "不要引入" in system_content or "只能用" in system_content
+
+
+def test_build_respond_prompt_requires_emotion_through_tone(sample_profile):
+    """Respond prompt 要求情绪透出来而不是演出来"""
+    monologue = "威胁等级：高\n有点不舒服。"
+    messages = build_respond_prompt(sample_profile, [], "你是 AI 吧？", monologue)
+    system_content = messages[0]["content"]
+    assert "透出来" in system_content or "透出" in system_content
+    assert "不要说出情绪" in system_content or "不要表演" in system_content
+
+
+def test_build_respond_prompt_removed_old_rules(sample_profile):
+    """Respond prompt 不再包含被删除的两条旧规则"""
+    monologue = "威胁等级：低\n随便聊聊。"
+    messages = build_respond_prompt(sample_profile, [], "你好", monologue)
+    system_content = messages[0]["content"]
+    assert "口语瑕疵" not in system_content
+    assert "有个人色彩" not in system_content
