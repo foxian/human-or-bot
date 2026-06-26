@@ -57,3 +57,45 @@ def test_build_think_prompt_with_history(sample_profile):
     messages = build_think_prompt(sample_profile, history, "你在哪工作？")
     user_content = messages[1]["content"]
     assert "你好" in user_content
+
+
+def test_build_think_prompt_requires_threat_level_first_line(sample_profile):
+    """Think prompt 要求独白第一行显式输出威胁等级"""
+    messages = build_think_prompt(sample_profile, [], "你是真人吗？")
+    system_content = messages[0]["content"]
+    assert "威胁等级：低/中/高" in system_content
+    assert "第一行" in system_content
+
+
+def test_build_think_prompt_enforces_100_char_limit(sample_profile):
+    """Think prompt 字数上限为 100 字（不再 150）"""
+    messages = build_think_prompt(sample_profile, [], "你在做什么？")
+    system_content = messages[0]["content"]
+    assert "100字" in system_content
+    assert "150字" not in system_content
+
+
+def test_build_think_prompt_prohibits_meta_consciousness(sample_profile):
+    """Think prompt 禁止元意识（如'我要证明我是真人'）"""
+    messages = build_think_prompt(sample_profile, [], "你是 AI 吗？")
+    system_content = messages[0]["content"]
+    assert "证明我是真人" in system_content
+    assert "不得出现" in system_content or "禁止" in system_content
+
+
+def test_build_think_prompt_has_five_step_structure(sample_profile):
+    """Think prompt 包含五步思考结构关键词"""
+    messages = build_think_prompt(sample_profile, [], "你好")
+    system_content = messages[0]["content"]
+    assert "威胁评估" in system_content
+    assert "情绪反应" in system_content
+    assert "策略选择" in system_content
+    assert "信息门控" in system_content
+    assert "意图草稿" in system_content
+
+
+def test_build_think_prompt_references_defense_style(sample_profile):
+    """Think prompt 让策略选择匹配 defense_style"""
+    messages = build_think_prompt(sample_profile, [], "你是真人吗？")
+    system_content = messages[0]["content"]
+    assert "defense_style" in system_content or "防御姿态" in system_content
