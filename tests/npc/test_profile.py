@@ -1,4 +1,5 @@
 import pytest
+from unittest.mock import AsyncMock, MagicMock, patch
 from npc.profile import NpcProfile, generate_npc_profile
 
 
@@ -72,3 +73,39 @@ def test_npc_profile_to_system_prompt_includes_sealed_topics():
     assert "父亲的工作" in prompt
     assert "大学那段日子" in prompt
     assert "回避" in prompt
+
+
+def test_npc_profile_to_system_prompt_omits_sealed_topics_when_empty():
+    """sealed_topics 为空时，to_system_prompt() 不输出 sealed_topics 相关段落"""
+    profile = NpcProfile(
+        name="测试人", age=30, occupation="工程师", city="北京",
+        personality=["认真"], backstory="测试背景",
+        hobbies=["读书"], speech_style="简洁",
+        defense_style="轻描带过",
+        sealed_topics=[],
+    )
+    prompt = profile.to_system_prompt()
+    assert "不想聊的话题" not in prompt
+    assert "回避方式" not in prompt
+
+
+@pytest.mark.asyncio
+async def test_generate_npc_profile_falls_back_on_invalid_defense_style():
+    """generate_npc_profile() 对无效 defense_style 回退到 '轻描带过'"""
+    fake_raw_json = (
+        '{"name":"测试人","age":30,"occupation":"工程师","city":"北京",'
+        '"personality":["认真"],"backstory":"测试背景",'
+        '"hobbies":["读书"],"speech_style":"简洁",'
+        '"defense_style":"不存在的姿态","sealed_topics":["x"]}'
+    )
+    mock_response = MagicMock()
+    mock_response.content = fake_raw_json
+    mock_llm = MagicMock()
+    mock_llm.ainvoke = AsyncMock(return_value=mock_response)
+
+    with patch("langchain_openai.ChatOpenAI", return_value=mock_llm):
+        profile = await generate_npc_profile()
+
+    assert profile.defense_style == "轻描带过"
+    assert profile.sealed_topics == ["x"]
+    assert profile.name == "测试人"
