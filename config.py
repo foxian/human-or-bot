@@ -14,4 +14,4 @@ TEMPERATURE_RESPOND = float(os.getenv("TEMPERATURE_RESPOND", "0.8"))
 # 游戏配置
 MAX_QUESTIONS = int(os.getenv("MAX_QUESTIONS", "10"))
 THINK_MAX_TOKENS = int(os.getenv("THINK_MAX_TOKENS", "200"))
-RESPOND_MAX_TOKENS = int(os.getenv("RESPOND_MAX_TOKENS", "150"))
+RESPOND_MAX_TOKENS = int(os.getenv("RESPOND_MAX_TOKENS", "80"))
