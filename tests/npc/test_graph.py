@@ -9,7 +9,8 @@ def sample_profile():
     return NpcProfile(
         name="陈建国", age=34, occupation="建筑设计师", city="成都",
         personality=["内敛"], backstory="测试背景",
-        hobbies=["摄影"], speech_style="简洁", quirks=["用「其实」开头"]
+        hobbies=["摄影"], speech_style="简洁",
+        defense_style="转移反问", sealed_topics=["父亲的工作"],
     )
 
 

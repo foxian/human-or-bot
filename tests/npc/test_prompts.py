@@ -11,7 +11,8 @@ def sample_profile():
         backstory="从小在重庆长大，后来定居成都。",
         hobbies=["胶片摄影", "徒步"],
         speech_style="话少但有力",
-        quirks=["喜欢用「其实」开头"]
+        defense_style="转移反问",
+        sealed_topics=["父亲的工作"],
     )
 
 
