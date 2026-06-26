@@ -43,7 +43,7 @@ LANGSMITH_PROJECT="npc"
 # LangSmith 追踪配置
 LANGSMITH_TRACING=true
 LANGSMITH_ENDPOINT=https://api.smith.langchain.com
-LANGSMITH_API_KEY=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
+LANGSMITH_API_KEY=your_langsmith_api_key_here
 LANGSMITH_PROJECT="npc"
 ```
 
